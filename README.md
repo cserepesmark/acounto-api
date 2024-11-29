@@ -25,11 +25,14 @@ $client = new AcountoApiClient();
 To upload a file, use the upload() method:
 
 ```php
-$response = $client->upload()->uploadFile([
-    'resourceType' => 'income',
+$fileContent = Storage::disk('local')->get($filePath);
+$fileName = basename($filePath);
+
+$response = $client->upload()->uploadFile($fileContent, $fileName, [
+    'resourceType' => 'expense',
     'externalId' => 'example-id-123',
     'description' => 'Example description',
-    'file' => base64_encode('Example file content'), // Replace with actual file content
+    'invoiceNumber' => 'AB-2024-01',
 ]);
 
 echo $response->json();
@@ -63,6 +66,8 @@ To query resources uploaded within a date range:
 
 ```php
 $response = $client->resourceByDates()->getResourcesByDates([
+    'page' => 0,
+    'size' => 100,
     'fromDate' => '2024-01-01',
     'toDate' => '2024-12-31',
 ]);

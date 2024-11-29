@@ -15,8 +15,10 @@ class UploadEndpoint
         $this->client = $client;
     }
 
-    public function uploadFile(array $data): PromiseInterface|Response
+    public function uploadFile(string $fileContent, string $fileName, array $data): PromiseInterface|Response
     {
-        return $this->client->post('/api/v1/resources/upload', $data);
+        return $this->client
+            ->attach('file', $fileContent, $fileName)
+            ->post('/api/v1/resources/upload', $data);
     }
 }
