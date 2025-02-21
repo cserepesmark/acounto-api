@@ -2,7 +2,6 @@
 
 namespace Cserepesmark\AcountoApi;
 
-use App\Models\Stakeholder;
 use Cserepesmark\AcountoApi\Endpoints\ExistsEndpoint;
 use Cserepesmark\AcountoApi\Endpoints\ResourceByDatesEndpoint;
 use Cserepesmark\AcountoApi\Endpoints\ResourceByExternalIdEndpoint;
@@ -13,19 +12,18 @@ use Illuminate\Support\Facades\Http;
 class AcountoApiClient
 {
     protected string $baseUrl;
-    protected Stakeholder $stakeholder;
+    protected string $apiKey;
 
-    public function __construct(Stakeholder $stakeholder)
+    public function __construct($apiKey = null)
     {
-        $this->stakeholder = $stakeholder;
-
         $this->baseUrl = config('acounto-api.base_url');
+        $this->apiKey = config('acounto-api.api_key', $apiKey);
     }
 
     protected function client(): PendingRequest
     {
         return Http::withHeaders([
-            'x-api-key' => $this->stakeholder->acounto_api_key,
+            'x-api-key' => $this->apiKey,
             'Accept' => 'application/json',
         ])->baseUrl($this->baseUrl);
     }
